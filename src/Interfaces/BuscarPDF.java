@@ -4,10 +4,6 @@
  */
 package Interfaces;
 
-/**
- *
- * @author LK
- */
 import java.awt.Desktop;
 import Conexion.PdfDAO;
 import JTable.Tabla_PdfVO;
@@ -20,7 +16,11 @@ import java.io.IOException;
 import javax.swing.table.DefaultTableModel;
 import JTable.PdfVO;
 import java.awt.Image;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 public class BuscarPDF extends javax.swing.JFrame {
 
@@ -55,17 +55,18 @@ public class BuscarPDF extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        docname = new javax.swing.JTextField();
+        txtNombreDoc = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtCedula = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtCodigo = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         tBuscar = new javax.swing.JTable();
-        jDateChooser1 = new com.toedter.calendar.JDateChooser();
+        dateChooser = new com.toedter.calendar.JDateChooser();
+        jButton2 = new javax.swing.JButton();
 
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -122,12 +123,12 @@ public class BuscarPDF extends javax.swing.JFrame {
         jLabel1.setText("Documentos encontrados");
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(436, 86, -1, -1));
 
-        docname.addActionListener(new java.awt.event.ActionListener() {
+        txtNombreDoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                docnameActionPerformed(evt);
+                txtNombreDocActionPerformed(evt);
             }
         });
-        jPanel3.add(docname, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 148, 272, -1));
+        jPanel3.add(txtNombreDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 148, 272, -1));
 
         jLabel2.setText("Nombre del documento");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 151, 113, -1));
@@ -153,26 +154,34 @@ public class BuscarPDF extends javax.swing.JFrame {
         });
         jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 256, 140, 31));
 
-        jLabel5.setText("Id del paquete");
+        jLabel5.setText("Codigo");
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 111, 113, -1));
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                txtCodigoActionPerformed(evt);
             }
         });
-        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 108, 272, -1));
+        jPanel3.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 108, 272, -1));
 
         tBuscar.setBackground(new java.awt.Color(204, 204, 204));
         tBuscar.setForeground(new java.awt.Color(51, 51, 51));
         tBuscar.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Archivo"
+                "Codigo", "Cedula", "Nombre", "Archivo", "Fecha"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         tBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tBuscar.setGridColor(new java.awt.Color(255, 255, 255));
         tBuscar.setSelectionBackground(new java.awt.Color(102, 102, 102));
@@ -197,7 +206,15 @@ public class BuscarPDF extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tBuscar);
 
         jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(436, 108, 590, 280));
-        jPanel3.add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 220, -1, -1));
+        jPanel3.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 220, -1, -1));
+
+        jButton2.setText("Atras");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, -1, -1));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -238,8 +255,10 @@ public class BuscarPDF extends javax.swing.JFrame {
         };
         
         dt.addColumn("Codigo");
+        dt.addColumn("Cedula");
         dt.addColumn("Nombre");
         dt.addColumn("Archivo");
+        dt.addColumn("Fecha");
 
         ImageIcon icono = null;
         if (get_Image("/Iconos/32pdf.png") != null) {
@@ -248,21 +267,22 @@ public class BuscarPDF extends javax.swing.JFrame {
 
         dao = new PdfDAO();
         PdfVO vo = new PdfVO();
-        int Cedula = Integer.parseInt(txtCedula.getText());
-        ArrayList<PdfVO> list = dao.BuscarPorCedula(Cedula);
+        int Codigo = Integer.parseInt(txtCodigo.getText());
+        ArrayList<PdfVO> list = dao.BuscarPorCodigo(Codigo);
 
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
-                Object fila[] = new Object[3];
+                Object fila[] = new Object[5];
                 vo = list.get(i);
-                fila[0] = vo.getCodigopdf();
-                fila[1] = vo.getNombrepdf();
-                if (vo.getArchivopdf() != null) {
-                    fila[2] = new JButton(icono);
+                fila[0] = vo.getCodigo();
+                fila[1] = vo.getCedula();
+                fila[2] = vo.getDocumento();
+                fila[4] = vo.getFecha();
+                if (vo.getArchivo() != null) {
+                    fila[3] = new JButton(icono);
                 } else {
-                    fila[2] = new JButton("Vacio");
+                    fila[3] = new JButton("Vacio");
                 }
-
                 dt.addRow(fila);
             }
             tBuscar.setEnabled(true);
@@ -282,9 +302,9 @@ public class BuscarPDF extends javax.swing.JFrame {
         }
         return null;
     }
-    private void docnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_docnameActionPerformed
+    private void txtNombreDocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreDocActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_docnameActionPerformed
+    }//GEN-LAST:event_txtNombreDocActionPerformed
 
     private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
         // TODO add your handling code here:
@@ -295,9 +315,9 @@ public class BuscarPDF extends javax.swing.JFrame {
         fillTable();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_txtCodigoActionPerformed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
         int column = tabla.getColumnModel().getColumnIndexAtX(evt.getX());
@@ -322,7 +342,7 @@ public class BuscarPDF extends javax.swing.JFrame {
 
             } else {
                 String name = "" + tabla.getValueAt(row, 1);
-                docname.setText(name);
+                txtNombreDoc.setText(name);
             }
         }
     }//GEN-LAST:event_tablaMouseClicked
@@ -350,8 +370,34 @@ public class BuscarPDF extends javax.swing.JFrame {
                     }
                 }
             } else {
-                String name = "" + tBuscar.getValueAt(row, 1);
-                txtCedula.setText(name);
+                try {
+                    String cedula = "" + tBuscar.getValueAt(row, 2);
+                    txtCedula.setText(cedula);
+                    String Documento = "" + tabla.getValueAt(row, 3);
+                    txtNombreDoc.setText(Documento);
+                    String Cedula = "" + tabla.getValueAt(row, 2);
+                    String Fecha = "" + tabla.getValueAt(row, 4);
+                    txtCedula.setText(Cedula);
+                    
+                    String[] tmpF = new String[3];
+                    tmpF[0] = (Fecha.split("-"))[2];
+                    tmpF[1] = (Fecha.split("-"))[1];
+                    tmpF[2] = (Fecha.split("-"))[0];
+                    String tmpS = "";
+                    for (String tmpF1 : tmpF) {
+                        tmpS = tmpS +"/" + tmpF1;
+                    }
+                    String[] tmp = tmpS.split("");
+                    tmpS = "";
+                    for(int x = 1; x < tmp.length; x++){
+                        tmpS = tmpS + tmp[x];
+                    }
+                    
+                dateChooser.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(tmpS));
+                } catch (ParseException ex) {
+                    Logger.getLogger(BuscarPDF.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                    
             }
         }
     }//GEN-LAST:event_tBuscarMouseClicked
@@ -361,6 +407,13 @@ public class BuscarPDF extends javax.swing.JFrame {
 
     private void tBuscarFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tBuscarFocusGained
     }//GEN-LAST:event_tBuscarFocusGained
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        Main m = new Main();
+        m.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
     
     /**
      * @param args the command line arguments
@@ -402,9 +455,9 @@ public class BuscarPDF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField docname;
+    private com.toedter.calendar.JDateChooser dateChooser;
     private javax.swing.JButton jButton1;
-    private com.toedter.calendar.JDateChooser jDateChooser1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -417,9 +470,10 @@ public class BuscarPDF extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTable tBuscar;
     private javax.swing.JTable tabla;
     private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtNombreDoc;
     // End of variables declaration//GEN-END:variables
 }

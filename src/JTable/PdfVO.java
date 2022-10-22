@@ -2,31 +2,27 @@ package JTable;
 
 import java.sql.Date;
 
-public class PdfVO {
+        public class PdfVO {
 
     /*Todo los atributos*/
-    int codigopdf;
+    int Codigo;
     int Cedula;
-    String nombrepdf;
-    byte[] archivopdf;
-    Date Fecha;    
+    String Documento;
+    byte[] Archivo;
+    Date Fecha;
 
     public PdfVO() {
+        
     }
 
-    /*Todo los codigos get*/
-    public int getCodigopdf() {
-        return codigopdf;
+    public int getCodigo() {
+        return Codigo;
     }
 
-    public String getNombrepdf() {
-        return nombrepdf;
+    public void setCodigo(int Codigo) {
+        this.Codigo = Codigo;
     }
 
-    public byte[] getArchivopdf() {
-        return archivopdf;
-    }
-    
     public int getCedula() {
         return Cedula;
     }
@@ -35,24 +31,28 @@ public class PdfVO {
         this.Cedula = Cedula;
     }
 
+    public String getDocumento() {
+        return Documento;
+    }
+
+    public void setDocumento(String Documento) {
+        this.Documento = Documento;
+    }
+
+    public byte[] getArchivo() {
+        return Archivo;
+    }
+
+    public void setArchivo(byte[] Archivo) {
+        this.Archivo = Archivo;
+    }
+
     public Date getFecha() {
         return Fecha;
     }
 
     public void setFecha(Date Fecha) {
         this.Fecha = Fecha;
-    }
-    
-    public void setCodigopdf(int codigopdf) {
-        this.codigopdf = codigopdf;
-    }
-
-    public void setNombrepdf(String nombrepdf) {
-        this.nombrepdf = nombrepdf;
-    }
-
-    public void setArchivopdf(byte[] archivopdf) {
-        this.archivopdf = archivopdf;
     }
 
 }

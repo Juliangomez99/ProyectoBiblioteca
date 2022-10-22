@@ -15,15 +15,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-/**
- *
- * @author Julian
- */
 public class SubirPDF extends javax.swing.JFrame {
 
     /**
@@ -39,23 +39,23 @@ public class SubirPDF extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         tpdf.visualizar_PdfVO(tabla);
         activa_boton(false, false, false, false, false, false);
-        txtNombre.setEnabled(false);
+        
     }
 
     public void guardar_pdf(int codigo, int cedula ,String nombre, File ruta, Date fecha) {
         PdfDAO pa = new PdfDAO();
         PdfVO po = new PdfVO();
-        po.setCodigopdf(codigo);
+        po.setCodigo(codigo);
         po.setCedula(cedula);
         po.setFecha(fecha);
-        po.setNombrepdf(nombre);
+        po.setDocumento(nombre);
         try {
             byte[] pdf = new byte[(int) ruta.length()];
             InputStream input = new FileInputStream(ruta);
             input.read(pdf);
-            po.setArchivopdf(pdf);
+            po.setArchivo(pdf);
         } catch (IOException ex) {
-            po.setArchivopdf(null);
+            po.setDocumento(null);
             //System.out.println("Error al agregar archivo pdf "+ex.getMessage());
         }
         pa.Agregar_PdfVO(po);
@@ -64,17 +64,17 @@ public class SubirPDF extends javax.swing.JFrame {
     public void modificar_pdf(int codigo, int cedula ,String nombre, File ruta, Date fecha) {
         PdfDAO pa = new PdfDAO();
         PdfVO po = new PdfVO();
-        po.setCodigopdf(codigo);
-        po.setNombrepdf(nombre);
+        po.setCodigo(codigo);
+        po.setDocumento(nombre);
         po.setCedula(cedula);
         po.setFecha(fecha);
         try {
             byte[] pdf = new byte[(int) ruta.length()];
             InputStream input = new FileInputStream(ruta);
             input.read(pdf);
-            po.setArchivopdf(pdf);
+            po.setArchivo(pdf);
         } catch (IOException ex) {
-            po.setArchivopdf(null);
+            po.setArchivo(null);
             //System.out.println("Error al agregar archivo pdf "+ex.getMessage());
         }
         pa.Modificar_PdfVO(po);
@@ -83,15 +83,15 @@ public class SubirPDF extends javax.swing.JFrame {
     public void modificar_pdf(int codigo, String nombre) {
         PdfDAO pa = new PdfDAO();
         PdfVO po = new PdfVO();
-        po.setCodigopdf(codigo);
-        po.setNombrepdf(nombre);
+        po.setCodigo(codigo);
+        po.setDocumento(nombre);
         pa.Modificar_PdfVO2(po);
     }
 
     public void eliminar_pdf(int codigo) {
         PdfDAO pa = new PdfDAO();
         PdfVO po = new PdfVO();
-        po.setCodigopdf(codigo);
+        po.setCodigo(codigo);
         pa.Eliminar_PdfVO(po);
     }
 
@@ -107,14 +107,14 @@ public class SubirPDF extends javax.swing.JFrame {
         }
     }
 
-    public void activa_boton(boolean a, boolean b, boolean c, boolean d, boolean cedula, boolean dateC) {
-        btnguardar.setEnabled(a);
-        btnmodificar.setEnabled(b);
-        btneliminar.setEnabled(c);
+    public void activa_boton(boolean guardar, boolean modificar, boolean eliminar, boolean seleccionar, boolean cedula, boolean dateC) {
+        btnguardar.setEnabled(guardar);
+        btnmodificar.setEnabled(modificar);
+        btneliminar.setEnabled(eliminar);
         txtCedula.setEnabled(cedula);
         dateChooser.setEnabled(dateC);
         txtNombre.setText("");
-        btnseleccionar.setEnabled(d);
+        btnseleccionar.setEnabled(seleccionar);
         btnseleccionar.setText("Seleccionar...");
     }
 
@@ -144,6 +144,7 @@ public class SubirPDF extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dateChooser = new com.toedter.calendar.JDateChooser();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Guardar y Leer PDF");
@@ -153,10 +154,10 @@ public class SubirPDF extends javax.swing.JFrame {
         tabla.setBackground(new java.awt.Color(204, 204, 204));
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null}
+                {null, null, null, null, null}
             },
             new String [] {
-                "Codigo", "Nombre", "Archivo"
+                "Codigo", "Cedula", "Nombre", "Archivo", "Fecha"
             }
         ));
         tabla.setGridColor(new java.awt.Color(255, 255, 255));
@@ -169,7 +170,7 @@ public class SubirPDF extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tabla);
 
-        jPanel7.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(436, 176, 590, 325));
+        jPanel7.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(436, 176, 610, 325));
 
         btnnuevo.setText("Nuevo");
         btnnuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -230,17 +231,19 @@ public class SubirPDF extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1040, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(35, 35, 35))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
-        jPanel7.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, -1));
+        jPanel7.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 90));
 
         txtCedula.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -258,6 +261,14 @@ public class SubirPDF extends javax.swing.JFrame {
         dateChooser.setDateFormatString("dd/MM/yyyy");
         jPanel7.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(126, 300, -1, -1));
 
+        jButton1.setText("Atras");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel7.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -267,8 +278,8 @@ public class SubirPDF extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -310,7 +321,7 @@ public class SubirPDF extends javax.swing.JFrame {
             tpdf.visualizar_PdfVO(tabla);
         }
         ruta_archivo = "";
-        activa_boton(false, false, false, false, false, false);
+        activa_boton(false, false, false, false, true, true);
         txtNombre.setEnabled(false);
 
     }//GEN-LAST:event_btnmodificarActionPerformed
@@ -318,7 +329,7 @@ public class SubirPDF extends javax.swing.JFrame {
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
         int column = tabla.getColumnModel().getColumnIndexAtX(evt.getX());
         int row = evt.getY() / tabla.getRowHeight();
-        activa_boton(false, true, true, true, false, false);
+        activa_boton(false, true, true, true, true, true);
         txtNombre.setEnabled(true);
         if (row < tabla.getRowCount() && row >= 0 && column < tabla.getColumnCount() && column >= 0) {
             id = (int) tabla.getValueAt(row, 0);
@@ -326,7 +337,7 @@ public class SubirPDF extends javax.swing.JFrame {
             if (value instanceof JButton) {
                 ((JButton) value).doClick();
                 JButton boton = (JButton) value;
-
+                
                 if (boton.getText().equals("Vacio")) {
                     JOptionPane.showMessageDialog(null, "No hay archivo");
                 } else {
@@ -339,8 +350,29 @@ public class SubirPDF extends javax.swing.JFrame {
                 }
 
             } else {
-                String name = "" + tabla.getValueAt(row, 1);
-                txtNombre.setText(name);
+                String Documento = "" + tabla.getValueAt(row, 2);
+                String Cedula = "" + tabla.getValueAt(row, 1);
+                String Fecha = "" + tabla.getValueAt(row, 4);
+                txtNombre.setText(Documento);
+                txtCedula.setText(Cedula);
+                try {
+                    String[] tmpF = new String[3];
+                    tmpF[0] = (Fecha.split("-"))[2];
+                    tmpF[1] = (Fecha.split("-"))[1];
+                    tmpF[2] = (Fecha.split("-"))[0];
+                    String tmpS = "";
+                    for (String tmpF1 : tmpF) {
+                        tmpS = tmpS +"/" + tmpF1;
+                    }
+                    String[] tmp = tmpS.split("");
+                    tmpS = "";
+                    for(int x = 1; x < tmp.length; x++){
+                        tmpS = tmpS + tmp[x];
+                    }
+                    dateChooser.setDate(new SimpleDateFormat("dd/MM/yyyy").parse(tmpS));
+                } catch (ParseException ex) {
+                    Logger.getLogger(SubirPDF.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }//GEN-LAST:event_tablaMouseClicked
@@ -363,6 +395,13 @@ public class SubirPDF extends javax.swing.JFrame {
     private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCedulaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        Main m = new Main();
+        m.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -406,6 +445,7 @@ public class SubirPDF extends javax.swing.JFrame {
     private javax.swing.JButton btnnuevo;
     private javax.swing.JButton btnseleccionar;
     private com.toedter.calendar.JDateChooser dateChooser;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

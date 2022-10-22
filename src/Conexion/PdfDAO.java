@@ -26,9 +26,11 @@ public class PdfDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 PdfVO vo = new PdfVO();
-                vo.setCodigopdf(rs.getInt(1));
-                vo.setNombrepdf(rs.getString(2));
-                vo.setArchivopdf(rs.getBytes(3));
+                vo.setCodigo(rs.getInt(1));
+                vo.setCedula(rs.getInt(2));
+                vo.setDocumento(rs.getString(3));
+                vo.setArchivo(rs.getBytes(4));
+                vo.setFecha(rs.getDate(5));
                 list.add(vo);
             }
         } catch (SQLException ex) {
@@ -47,10 +49,10 @@ public class PdfDAO {
     }
     
     /*Metodo listar*/
-    public ArrayList<PdfVO> BuscarPorCedula(int Cedula) {
+    public ArrayList<PdfVO> BuscarPorCodigo(int Codigo) {
         ArrayList<PdfVO> list = new ArrayList<PdfVO>();
         Conectar conec = new Conectar();
-        String sql = "SELECT * FROM pdf where Codigo = '"+Cedula+"' ;";
+        String sql = "SELECT * FROM pdf where Codigo = '"+Codigo+"' ;";
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
@@ -58,9 +60,11 @@ public class PdfDAO {
             rs = ps.executeQuery();
             while (rs.next()) {
                 PdfVO vo = new PdfVO();
-                vo.setCodigopdf(rs.getInt(1));
-                vo.setNombrepdf(rs.getString(2));
-                vo.setArchivopdf(rs.getBytes(3));
+                vo.setCodigo(rs.getInt(1));
+                vo.setCedula(rs.getInt(2));
+                vo.setDocumento(rs.getString(3));
+                vo.setArchivo(rs.getBytes(4));
+                vo.setFecha(rs.getDate(5));
                 list.add(vo);
             }
         } catch (SQLException ex) {
@@ -85,10 +89,10 @@ public class PdfDAO {
         PreparedStatement ps = null;
         try {
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setInt(1, vo.getCodigopdf());
+            ps.setInt(1, vo.getCodigo());
             ps.setInt(2, vo.getCedula());
-            ps.setString(3, vo.getNombrepdf());
-            ps.setBytes(4, vo.getArchivopdf());
+            ps.setString(3, vo.getDocumento());
+            ps.setBytes(4, vo.getArchivo());
             ps.setDate(5, vo.getFecha());
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -112,11 +116,11 @@ public class PdfDAO {
         PreparedStatement ps = null;
         try {
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setString(1, vo.getNombrepdf());
+            ps.setString(1, vo.getDocumento());
             ps.setInt(2, vo.getCedula());
-            ps.setBytes(3, vo.getArchivopdf());
+            ps.setBytes(3, vo.getArchivo());
             ps.setDate(4, vo.getFecha());
-            ps.setInt(5, vo.getCodigopdf());
+            ps.setInt(5, vo.getCodigo());
 
             ps.executeUpdate();
         } catch (SQLException ex) {
@@ -134,12 +138,12 @@ public class PdfDAO {
 
     public void Modificar_PdfVO2(PdfVO vo) {
         Conectar conec = new Conectar();
-        String sql = "UPDATE pdf SET nombrepdf = ? WHERE Codigo = ?;";
+        String sql = "UPDATE pdf SET Documento = ? WHERE Codigo = ?;";
         PreparedStatement ps = null;
         try {
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setString(1, vo.getNombrepdf());
-            ps.setInt(2, vo.getCodigopdf());
+            ps.setString(1, vo.getDocumento());
+            ps.setInt(2, vo.getCodigo());
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -161,7 +165,7 @@ public class PdfDAO {
         PreparedStatement ps = null;
         try {
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setInt(1, vo.getCodigopdf());
+            ps.setInt(1, vo.getCodigo());
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -185,7 +189,7 @@ public class PdfDAO {
         byte[] b = null;
 
         try {
-            ps = cn.getConnection().prepareStatement("SELECT archivopdf FROM pdf WHERE Codigo = ?;");
+            ps = cn.getConnection().prepareStatement("SELECT Archivo FROM pdf WHERE Codigo = ?;");
             ps.setInt(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {

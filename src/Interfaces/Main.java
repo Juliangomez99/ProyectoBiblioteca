@@ -4,12 +4,6 @@
  */
 package Interfaces;
 
-
-/**
- *
- * @author Julian
- */
-
 import Interfaces.SubirPDF;
 import Interfaces.BuscarPDF;
 import javax.swing.UIManager;
