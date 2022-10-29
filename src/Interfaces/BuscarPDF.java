@@ -317,13 +317,10 @@ public class BuscarPDF extends javax.swing.JFrame {
         }
          
         if(!txtNombreDoc.getText().isEmpty()){
-           String    Nombre = txtNombreDoc.getText();
+           String Nombre = txtNombreDoc.getText();
            list = dao.Buscar(Nombre, "Documento");
         }
         
-        java.util.Date date = dateChooser.getDate();
-        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        list = dao.Buscar(formatter.format(date), "Fecha");
 
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
@@ -370,8 +367,9 @@ public class BuscarPDF extends javax.swing.JFrame {
         PdfVO vo = new PdfVO();
         ArrayList<PdfVO> list = null;
         
-
-        //Date fecha = new java.sql.Date(dateChooser.getCalendar().getTimeInMillis());
+        java.util.Date date = dateChooser.getDate();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        list = dao.Buscar(formatter.format(date), "Fecha");
         
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
@@ -424,7 +422,7 @@ public class BuscarPDF extends javax.swing.JFrame {
                 if(DD.equals(Date)){  
                     JOptionPane.showMessageDialog(null, "Ingrese al menos un campo");
                 }else{
-                    fillTable();
+                    fillTableByDate();
                 }
             }
         } catch (ParseException ex) {

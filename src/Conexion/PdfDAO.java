@@ -51,9 +51,9 @@ public class PdfDAO {
     /*Metodo listar*/
     public ArrayList<PdfVO> Buscar(String parametro, String tipo) {
         ArrayList<PdfVO> list = new ArrayList<PdfVO>();
-        System.err.println(parametro);
         Conectar conec = new Conectar();
         String sql = "SELECT * FROM pdf where "+tipo+" = '"+parametro+"' ;";
+        System.out.println(sql);
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
@@ -216,5 +216,5 @@ public class PdfDAO {
             System.out.println("Error al abrir archivo PDF " + ex.getMessage());
         }
     }
-
+    
 }

@@ -74,4 +74,34 @@ public class UserDAO {
         }
         return v;
     }
+    
+    /*Metodo Validar*/
+    public int ValidarPermisos(Usuario u) {
+        int v = 2;
+        Conectar conec = new Conectar();
+        String sql = "SELECT * FROM usuarios where Cedula = '"+u.getCedula()+"' ;";
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try {
+            ps = conec.getConnection().prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                v = rs.getInt(2);
+                System.out.println(v);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            try {
+                ps.close();
+                rs.close();
+                conec.desconectar();
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+        return v;
+    }
 }

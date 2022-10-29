@@ -416,11 +416,6 @@ public class Registrar extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDireccionKeyPressed
 
     private void txtDireccionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDireccionKeyTyped
-        char key = evt.getKeyChar();
-        if(Character.isLetter(key) || Character.isWhitespace(key) || Character.isISOControl(key)){
-        }else{
-            evt.consume();
-        }
     }//GEN-LAST:event_txtDireccionKeyTyped
 
     private void txtCorreoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCorreoKeyTyped

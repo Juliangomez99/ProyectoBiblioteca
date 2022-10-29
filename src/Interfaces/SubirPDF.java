@@ -7,6 +7,8 @@ package Interfaces;
 
 import Conexion.sql;
 import Conexion.PdfDAO;
+import Conexion.UserDAO;
+import Conexion.Usuario;
 import JTable.Tabla_PdfVO;
 import JTable.PdfVO;
 import java.awt.Desktop;
@@ -33,13 +35,21 @@ public class SubirPDF extends javax.swing.JFrame {
     String ruta_archivo = "";
     int id = -1;
 
-    public SubirPDF() {
+    public SubirPDF(Usuario Cedula) {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         tpdf.visualizar_PdfVO(tabla);
         activa_boton(false, false, false, false, false, false);
+        UserDAO UD = new UserDAO();
+        int p = UD.ValidarPermisos(Cedula);
         
+        if (p == 2){
+            btneliminar.setVisible(false);
+        }else if (p== 3){
+            btnmodificar.setVisible(false);
+            btneliminar.setVisible(false);
+        }
     }
 
     public void guardar_pdf(int codigo, int cedula ,String nombre, File ruta, Date fecha) {
@@ -317,16 +327,13 @@ public class SubirPDF extends javax.swing.JFrame {
         if (!txtNombre.getText().isEmpty() && ruta_archivo.trim().length() != 0 && !txtCedula.getText().isEmpty()) {
             modificar_pdf(id, cedula, nombre, ruta, fecha);
             tpdf.visualizar_PdfVO(tabla);
-            System.out.println("Interfaces.SubirPDF.btnmodificarActionPerformed()");
         }else if (ruta_archivo.trim().length() == 0) {
             modificar_pdf(id, cedula, nombre, ruta, fecha);
             tpdf.visualizar_PdfVO(tabla);
-            System.out.println("asds");
         }
-        ruta_archivo = "";
         activa_boton(false, false, false, false, true, true);
-        txtNombre.setEnabled(false);
-
+        txtCedula.setText("");
+        txtNombre.setText("");
     }//GEN-LAST:event_btnmodificarActionPerformed
 
     private void tablaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaMouseClicked
@@ -394,7 +401,6 @@ public class SubirPDF extends javax.swing.JFrame {
         ruta_archivo = "";
         txtCedula.setText("");
         txtNombre.setText("");
-        
     }//GEN-LAST:event_btnnuevoActionPerformed
 
     private void txtCedulaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCedulaActionPerformed

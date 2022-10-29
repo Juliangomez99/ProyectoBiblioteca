@@ -13,8 +13,9 @@ public class IniciarSesion extends javax.swing.JFrame {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        System.out.println();
     }
-    
+        
     public Usuario getUser() {
         return User;
     }
@@ -205,10 +206,10 @@ public class IniciarSesion extends javax.swing.JFrame {
             u.setContra((String.valueOf(txtContra.getPassword())));
             if(UD.ValidarUsuario(u) != null){
                 setUser(UD.ValidarUsuario(u));
+                Main m = new Main(User);
                 JOptionPane.showMessageDialog(null, "Bienvenido " + User.getNombre());
                 txtCedula.setText("");
-                txtContra.setText("");
-                Main m = new Main();
+                txtContra.setText("");             
                 m.setVisible(true);
                 this.setVisible(false);
             } else {
