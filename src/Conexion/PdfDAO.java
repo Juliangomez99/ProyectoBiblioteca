@@ -49,10 +49,11 @@ public class PdfDAO {
     }
     
     /*Metodo listar*/
-    public ArrayList<PdfVO> BuscarPorCodigo(int Codigo) {
+    public ArrayList<PdfVO> Buscar(String parametro, String tipo) {
         ArrayList<PdfVO> list = new ArrayList<PdfVO>();
+        System.err.println(parametro);
         Conectar conec = new Conectar();
-        String sql = "SELECT * FROM pdf where Codigo = '"+Codigo+"' ;";
+        String sql = "SELECT * FROM pdf where "+tipo+" = '"+parametro+"' ;";
         ResultSet rs = null;
         PreparedStatement ps = null;
         try {
@@ -81,6 +82,7 @@ public class PdfDAO {
         }
         return list;
     }
+    
     
     /*Metodo agregar*/
     public void Agregar_PdfVO(PdfVO vo) {
@@ -112,16 +114,15 @@ public class PdfDAO {
     /*Metodo Modificar*/
     public void Modificar_PdfVO(PdfVO vo) {
         Conectar conec = new Conectar();
-        String sql = "UPDATE pdf SET Documento = ?, Cedula = ?, Archivo = ?, Fecha = ?  WHERE Codigo = ?;";
+        String sql = "UPDATE pdf SET Cedula = ?, Documento = ?, Archivo = ?, Fecha = ?  WHERE Codigo = ?;";
         PreparedStatement ps = null;
         try {
             ps = conec.getConnection().prepareStatement(sql);
-            ps.setString(1, vo.getDocumento());
-            ps.setInt(2, vo.getCedula());
+            ps.setInt(1, vo.getCedula());
+            ps.setString(2, vo.getDocumento());
             ps.setBytes(3, vo.getArchivo());
             ps.setDate(4, vo.getFecha());
             ps.setInt(5, vo.getCodigo());
-
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

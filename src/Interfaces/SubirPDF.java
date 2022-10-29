@@ -35,7 +35,7 @@ public class SubirPDF extends javax.swing.JFrame {
 
     public SubirPDF() {
         initComponents();
-                this.setResizable(false);
+        this.setResizable(false);
         this.setLocationRelativeTo(null);
         tpdf.visualizar_PdfVO(tabla);
         activa_boton(false, false, false, false, false, false);
@@ -113,6 +113,7 @@ public class SubirPDF extends javax.swing.JFrame {
         btneliminar.setEnabled(eliminar);
         txtCedula.setEnabled(cedula);
         dateChooser.setEnabled(dateC);
+        txtNombre.setEnabled(guardar);
         txtNombre.setText("");
         btnseleccionar.setEnabled(seleccionar);
         btnseleccionar.setText("Seleccionar...");
@@ -259,7 +260,7 @@ public class SubirPDF extends javax.swing.JFrame {
         jPanel7.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 303, -1, -1));
 
         dateChooser.setDateFormatString("dd/MM/yyyy");
-        jPanel7.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(126, 300, -1, -1));
+        jPanel7.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(126, 300, 140, -1));
 
         jButton1.setText("Atras");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -313,12 +314,14 @@ public class SubirPDF extends javax.swing.JFrame {
         File ruta = new File(ruta_archivo);
         int cedula = Integer.parseInt(txtCedula.getText());
         Date fecha = new java.sql.Date(dateChooser.getCalendar().getTimeInMillis());
-        if (nombre.trim().length() != 0 && ruta_archivo.trim().length() != 0) {
+        if (!txtNombre.getText().isEmpty() && ruta_archivo.trim().length() != 0 && !txtCedula.getText().isEmpty()) {
             modificar_pdf(id, cedula, nombre, ruta, fecha);
             tpdf.visualizar_PdfVO(tabla);
-        } else if (ruta_archivo.trim().length() == 0) {
-            modificar_pdf(id, nombre);
+            System.out.println("Interfaces.SubirPDF.btnmodificarActionPerformed()");
+        }else if (ruta_archivo.trim().length() == 0) {
+            modificar_pdf(id, cedula, nombre, ruta, fecha);
             tpdf.visualizar_PdfVO(tabla);
+            System.out.println("asds");
         }
         ruta_archivo = "";
         activa_boton(false, false, false, false, true, true);
@@ -389,6 +392,8 @@ public class SubirPDF extends javax.swing.JFrame {
         activa_boton(true, false, false, true, true, true);
         txtNombre.setEnabled(true);
         ruta_archivo = "";
+        txtCedula.setText("");
+        txtNombre.setText("");
         
     }//GEN-LAST:event_btnnuevoActionPerformed
 

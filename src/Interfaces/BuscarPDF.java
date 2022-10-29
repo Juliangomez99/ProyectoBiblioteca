@@ -16,6 +16,8 @@ import java.io.IOException;
 import javax.swing.table.DefaultTableModel;
 import JTable.PdfVO;
 import java.awt.Image;
+import java.sql.Date;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +38,12 @@ public class BuscarPDF extends javax.swing.JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         tBuscar.setEnabled(false);
+        try {
+            // TODO add your handling code here:
+            dateChooser.setDate(new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2020"));
+        } catch (ParseException ex) {
+            Logger.getLogger(BuscarPDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -60,7 +68,7 @@ public class BuscarPDF extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         txtCedula = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnBuscar = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -128,6 +136,14 @@ public class BuscarPDF extends javax.swing.JFrame {
                 txtNombreDocActionPerformed(evt);
             }
         });
+        txtNombreDoc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNombreDocKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreDocKeyTyped(evt);
+            }
+        });
         jPanel3.add(txtNombreDoc, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 148, 272, -1));
 
         jLabel2.setText("Nombre del documento");
@@ -141,18 +157,23 @@ public class BuscarPDF extends javax.swing.JFrame {
                 txtCedulaActionPerformed(evt);
             }
         });
+        txtCedula.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCedulaKeyTyped(evt);
+            }
+        });
         jPanel3.add(txtCedula, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 188, 272, -1));
 
         jLabel4.setText("Fecha radicado");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 231, 113, -1));
 
-        jButton1.setText("Buscar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnBuscar.setText("Buscar");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnBuscarActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 256, 140, 31));
+        jPanel3.add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 256, 140, 31));
 
         jLabel5.setText("Codigo");
         jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(27, 111, 113, -1));
@@ -160,6 +181,14 @@ public class BuscarPDF extends javax.swing.JFrame {
         txtCodigo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodigoActionPerformed(evt);
+            }
+        });
+        txtCodigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodigoKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodigoKeyTyped(evt);
             }
         });
         jPanel3.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 108, 272, -1));
@@ -206,7 +235,16 @@ public class BuscarPDF extends javax.swing.JFrame {
         jScrollPane2.setViewportView(tBuscar);
 
         jPanel3.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(436, 108, 590, 280));
-        jPanel3.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 220, -1, -1));
+
+        dateChooser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                dateChooserKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                dateChooserKeyTyped(evt);
+            }
+        });
+        jPanel3.add(dateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(158, 220, 140, -1));
 
         jButton2.setText("Atras");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -267,9 +305,74 @@ public class BuscarPDF extends javax.swing.JFrame {
 
         dao = new PdfDAO();
         PdfVO vo = new PdfVO();
-        int Codigo = Integer.parseInt(txtCodigo.getText());
-        ArrayList<PdfVO> list = dao.BuscarPorCodigo(Codigo);
+        ArrayList<PdfVO> list = null;
+        if(!txtCodigo.getText().isEmpty()){
+           String Codigo = txtCodigo.getText();
+           list = dao.Buscar(Codigo, "Codigo");
+        }
+        
+        if(!txtCedula.getText().isEmpty()){
+           String Cedula = txtCedula.getText();
+           list = dao.Buscar(Cedula, "Cedula");
+        }
+         
+        if(!txtNombreDoc.getText().isEmpty()){
+           String    Nombre = txtNombreDoc.getText();
+           list = dao.Buscar(Nombre, "Documento");
+        }
+        
+        java.util.Date date = dateChooser.getDate();
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        list = dao.Buscar(formatter.format(date), "Fecha");
 
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                Object fila[] = new Object[5];
+                vo = list.get(i);
+                fila[0] = vo.getCodigo();
+                fila[1] = vo.getCedula();
+                fila[2] = vo.getDocumento();
+                fila[4] = vo.getFecha();
+                if (vo.getArchivo() != null) {
+                    fila[3] = new JButton(icono);
+                } else {
+                    fila[3] = new JButton("Vacio");
+                }
+                dt.addRow(fila);
+            }
+            tBuscar.setEnabled(true);
+            tBuscar.setModel(dt);
+            tBuscar.setRowHeight(32);
+        }
+    }
+    
+    private void fillTableByDate(){
+        tBuscar.setDefaultRenderer(Object.class, new imgTabla());
+        DefaultTableModel dt = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        dt.addColumn("Codigo");
+        dt.addColumn("Cedula");
+        dt.addColumn("Nombre");
+        dt.addColumn("Archivo");
+        dt.addColumn("Fecha");
+
+        ImageIcon icono = null;
+        if (get_Image("/Iconos/32pdf.png") != null) {
+            icono = new ImageIcon(get_Image("/Iconos/32pdf.png"));
+        }
+
+        dao = new PdfDAO();
+        PdfVO vo = new PdfVO();
+        ArrayList<PdfVO> list = null;
+        
+
+        //Date fecha = new java.sql.Date(dateChooser.getCalendar().getTimeInMillis());
+        
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 Object fila[] = new Object[5];
@@ -310,10 +413,25 @@ public class BuscarPDF extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCedulaActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        fillTable();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        try {
+            java.util.Date Date = dateChooser.getCalendar().getTime();
+            java.util.Date DD = (java.util.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2020");
+            
+            if(!txtCedula.getText().isEmpty() ||  !txtCodigo.getText().isEmpty() || !txtNombreDoc.getText().isEmpty()){
+                fillTable();
+            }else{
+                if(DD.equals(Date)){  
+                    JOptionPane.showMessageDialog(null, "Ingrese al menos un campo");
+                }else{
+                    fillTable();
+                }
+            }
+        } catch (ParseException ex) {
+            Logger.getLogger(BuscarPDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
         // TODO add your handling code here:
@@ -414,6 +532,43 @@ public class BuscarPDF extends javax.swing.JFrame {
         m.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtCodigoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyPressed
+    }//GEN-LAST:event_txtCodigoKeyPressed
+
+    private void txtCodigoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoKeyTyped
+        char key = evt.getKeyChar();
+        if (key < '0' || key > '9' && key !='\b'){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCodigoKeyTyped
+
+    private void txtCedulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCedulaKeyTyped
+        char key = evt.getKeyChar();
+        if (key < '0' || key > '9' && key !='\b'){
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCedulaKeyTyped
+
+    private void txtNombreDocKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreDocKeyTyped
+        char key = evt.getKeyChar();
+        if(Character.isLetter(key) || Character.isWhitespace(key) || Character.isISOControl(key)){
+        }else{
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreDocKeyTyped
+
+    private void txtNombreDocKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreDocKeyPressed
+
+    }//GEN-LAST:event_txtNombreDocKeyPressed
+
+    private void dateChooserKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateChooserKeyTyped
+
+    }//GEN-LAST:event_dateChooserKeyTyped
+
+    private void dateChooserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_dateChooserKeyPressed
+
+    }//GEN-LAST:event_dateChooserKeyPressed
     
     /**
      * @param args the command line arguments
@@ -455,8 +610,8 @@ public class BuscarPDF extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBuscar;
     private com.toedter.calendar.JDateChooser dateChooser;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

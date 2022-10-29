@@ -3,16 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/JTable/Tabla_PdfVO.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Interfaces/Main.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Conexion/Conectar.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/JTable/PdfVO.java</file>
             <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Interfaces/SubirPDF.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Iconos/lpdf.png</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/JTable/imgTabla.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Interfaces/BuscarPDF.java</file>
             <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Conexion/PdfDAO.java</file>
-            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Conexion/sql.java</file>
+            <file>file:/E:/Code/SQLpdf%20Java/Netbeans/SQLpdf/src/Interfaces/Registrar.java</file>
         </group>
     </open-files>
 </project-private>

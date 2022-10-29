@@ -4,20 +4,18 @@
  */
 package Interfaces;
 
-import Interfaces.SubirPDF;
-import Interfaces.BuscarPDF;
+import Conexion.Usuario;
 import javax.swing.UIManager;
 public class Main extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Main
-     */
     
     public Main() {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
+        IniciarSesion IS = new IniciarSesion();
+        //labelBienvenido.setText("Bienvenido "+ IS.getUser().getNombre());
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,7 +27,7 @@ public class Main extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
+        labelBienvenido = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -39,29 +37,29 @@ public class Main extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(0, 153, 153));
 
-        jLabel7.setBackground(new java.awt.Color(153, 153, 153));
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Bienvenido");
+        labelBienvenido.setBackground(new java.awt.Color(153, 153, 153));
+        labelBienvenido.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        labelBienvenido.setForeground(new java.awt.Color(51, 51, 51));
+        labelBienvenido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelBienvenido.setText("Bienvenido ...");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(labelBienvenido, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(38, Short.MAX_VALUE)
-                .addComponent(jLabel7)
+                .addComponent(labelBienvenido)
                 .addGap(35, 35, 35))
         );
 
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setText("Salir");
+        jButton1.setText("Cerrar Sesion");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
@@ -121,6 +119,9 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        IniciarSesion i = new IniciarSesion();
+        i.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -147,7 +148,7 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        System.exit(0);
+
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
@@ -186,8 +187,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JLabel labelBienvenido;
     // End of variables declaration//GEN-END:variables
 }
